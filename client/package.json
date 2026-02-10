@@ -29,7 +29,7 @@
     "axios": "^1.7.2",
     "dayjs": "^1.11.18",
     "file-saver": "^2.0.5",
-    "pretty-bytes": "^6.1.1",
+    "pretty-bytes": "^7.1.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-error-boundary": "^6.0.0",
