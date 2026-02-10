@@ -195,7 +195,7 @@ export const PythonList: React.FC = () => {
                         <CardHeader
                           selectableActions={{
                             onClickAction: () => onClickCard(item),
-                            selectableActionAriaLabelledby: `${item.name}-card}`
+                            selectableActionAriaLabelledby: `${item.name}-card}`,
                           }}
                         >
                           <Flex spaceItems={{ default: "spaceItemsSm" }}>
