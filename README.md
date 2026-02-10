@@ -4,12 +4,19 @@ A React-based web application demo.
 
 ## Quick Start
 
+- Install dependencies:
 ```bash
-# Install dependencies
 npm ci
+```
 
-# Start development server
-npm run start:dev
+### Start with mock data
+```bash
+MOCK=on npm run start:dev
+```
+
+### Start server with credentials
+```bash
+PULP_API_URL="https://packages.redhat.com" PULP_USERNAME=<username> PULP_PASSWORD=<password> npm run start:dev
 ```
 
 The application will be available at http://localhost:3000
