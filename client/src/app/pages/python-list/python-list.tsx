@@ -29,16 +29,14 @@ export const PythonList: React.FC = () => {
   return (
     <>
       <DocumentMetadata title={"Python"} />
-      <PageSection type="breadcrumb">
+      <PageSection>
         <DistributionSelector
           distributions={distributions}
           selected={selectedDistribution}
           onChange={onDistributionSelected}
         />
       </PageSection>
-      <PageSection>
-        <Divider />
-      </PageSection>
+      <Divider />
       {selectedDistribution ? (
         <>
           <PageSection>
