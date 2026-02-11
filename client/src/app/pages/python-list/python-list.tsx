@@ -45,9 +45,7 @@ export const PythonList: React.FC = () => {
             </Title>
           </PageSection>
           <PageSection>
-            {selectedDistribution && (
-              <CardList distribution={selectedDistribution} />
-            )}
+            <CardList distribution={selectedDistribution} />
           </PageSection>
         </>
       ) : (
