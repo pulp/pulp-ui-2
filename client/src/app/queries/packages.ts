@@ -106,7 +106,6 @@ export const useFetchUniquePackageMetadata = (
 };
 
 export const packageByIdQueryOptions = (packageId: string) => {
-
   // The packageId can be either:
   // - A package name (e.g. "scipy") from the card list via the PyPI Simple API
   // - A Pulp href (e.g. "/api/pulp/.../content/python/packages/019c24e4-.../")
