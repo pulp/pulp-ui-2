@@ -568,6 +568,105 @@ export const packageMock: PythonPythonPackageContentResponse = {
   provenance: undefined,
 };
 
+export const packageVersionsMock: PaginatedpythonPythonPackageContentResponseList =
+  {
+    count: 4,
+    next: undefined,
+    previous: undefined,
+    results: [
+      {
+        pulp_href:
+          "/api/pulp/calunga-ui-dev/api/v3/content/python/packages/019c24e4-0001-0000-0000-000000000001/",
+        prn: "prn:python.pythonpackagecontent:019c24e4-0001-0000-0000-000000000001",
+        pulp_created: "2026-01-15T10:00:00.000000Z",
+        pulp_last_updated: "2026-01-15T10:00:00.000000Z",
+        pulp_labels: {},
+        name: "scipy",
+        version: "1.8.0",
+        summary: "Fundamental algorithms for scientific computing in Python",
+        author: "",
+        author_email: "",
+        maintainer: "",
+        maintainer_email: "SciPy Developers <scipy-dev@python.org>",
+        license: "BSD-3-Clause",
+        requires_python: ">=3.8,<3.11",
+        classifiers:
+          '["Development Status :: 5 - Production/Stable", "Intended Audience :: Developers", "Intended Audience :: Science/Research", "License :: OSI Approved :: BSD License", "Programming Language :: Python :: 3"]',
+        project_urls:
+          '{"documentation": "https://docs.scipy.org/doc/scipy/", "source": "https://github.com/scipy/scipy"}',
+        description: "SciPy 1.8.0 release",
+        description_content_type: "text/x-rst",
+        filename: "scipy-1.8.0-cp38-cp38-manylinux_2_17_x86_64.whl",
+        packagetype: "bdist_wheel",
+        python_version: "cp38",
+        size: 38000000,
+        sha256:
+          "aaa9ba39ab63f0b00953d726ba349113c6e542e89676d2661d2c95eadfaeb6a9",
+      },
+      {
+        pulp_href:
+          "/api/pulp/calunga-ui-dev/api/v3/content/python/packages/019c24e4-0002-0000-0000-000000000002/",
+        prn: "prn:python.pythonpackagecontent:019c24e4-0002-0000-0000-000000000002",
+        pulp_created: "2026-01-20T10:00:00.000000Z",
+        pulp_last_updated: "2026-01-20T10:00:00.000000Z",
+        pulp_labels: {},
+        name: "scipy",
+        version: "1.9.0rc1",
+        summary: "Fundamental algorithms for scientific computing in Python",
+        author: "",
+        author_email: "",
+        maintainer: "",
+        maintainer_email: "SciPy Developers <scipy-dev@python.org>",
+        license: "BSD-3-Clause",
+        requires_python: ">=3.8,<3.12",
+        classifiers:
+          '["Development Status :: 5 - Production/Stable", "Intended Audience :: Developers", "Intended Audience :: Science/Research", "License :: OSI Approved :: BSD License", "Programming Language :: Python :: 3"]',
+        project_urls:
+          '{"documentation": "https://docs.scipy.org/doc/scipy/", "source": "https://github.com/scipy/scipy"}',
+        description: "SciPy 1.9.0rc1 release",
+        description_content_type: "text/x-rst",
+        filename: "scipy-1.9.0rc1-cp38-cp38-manylinux_2_17_x86_64.whl",
+        packagetype: "bdist_wheel",
+        python_version: "cp38",
+        size: 39500000,
+        sha256:
+          "bbb9ba39ab63f0b00953d726ba349113c6e542e89676d2661d2c95eadfaeb6a9",
+      },
+      {
+        ...packageMock,
+      },
+      {
+        pulp_href:
+          "/api/pulp/calunga-ui-dev/api/v3/content/python/packages/019c24e4-0004-0000-0000-000000000004/",
+        prn: "prn:python.pythonpackagecontent:019c24e4-0004-0000-0000-000000000004",
+        pulp_created: "2026-02-10T10:00:00.000000Z",
+        pulp_last_updated: "2026-02-10T10:00:00.000000Z",
+        pulp_labels: {},
+        name: "scipy",
+        version: "1.9.0",
+        summary: "Fundamental algorithms for scientific computing in Python",
+        author: "",
+        author_email: "",
+        maintainer: "",
+        maintainer_email: "SciPy Developers <scipy-dev@python.org>",
+        license: "BSD-3-Clause",
+        requires_python: ">=3.8,<3.12",
+        classifiers:
+          '["Development Status :: 5 - Production/Stable", "Intended Audience :: Developers", "Intended Audience :: Science/Research", "License :: OSI Approved :: BSD License", "Programming Language :: Python :: 3"]',
+        project_urls:
+          '{"documentation": "https://docs.scipy.org/doc/scipy/", "source": "https://github.com/scipy/scipy"}',
+        description: "SciPy 1.9.0 stable release",
+        description_content_type: "text/x-rst",
+        filename: "scipy-1.9.0-cp38-cp38-manylinux_2_17_x86_64.whl",
+        packagetype: "bdist_wheel",
+        python_version: "cp38",
+        size: 40500000,
+        sha256:
+          "ddd9ba39ab63f0b00953d726ba349113c6e542e89676d2661d2c95eadfaeb6a9",
+      },
+    ],
+  };
+
 export const uniquePackagesMock: UniquePackageResponse = {
   meta: {
     "api-version": "1.1",
@@ -2446,3 +2545,4 @@ export const uniquePackageMock: UniquePackageMetadataResponse = {
     },
   ],
 };
+

@@ -8,8 +8,8 @@ import {
   apiPypiPypiRead,
   apiPypiSimpleRead,
   contentPythonPackagesList,
-  contentPythonPackagesRead,
 } from "@app/client";
+import type { PythonPythonPackageContentResponse } from "@app/client";
 import { PULP_DOMAIN } from "@app/Constants";
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
@@ -17,12 +17,15 @@ import { mockQueryFn } from "./helpers";
 import {
   packageMock,
   packagesMock,
+  packageVersionsMock,
   uniquePackageMock,
   uniquePackagesMock,
 } from "./mocks/packages.mock";
 
 export const UniquePackagesQueryKey = "unique-packages";
 export const PackagesQueryKey = "packages";
+export const PackageByIdQueryKey = "package-by-id";
+export const PackageVersionsQueryKey = "package-versions";
 
 export const useFetchUniquePackages = (
   args: { distributionPath: string },
@@ -101,6 +104,82 @@ export const useFetchUniquePackageMetadata = (
   };
 };
 
+export const packageByIdQueryOptions = (packageId: string) => {
+  const isPulpHref =
+    packageId.startsWith("/api/pulp/") || packageId.startsWith("/pulp/");
+
+  return {
+    queryKey: [PackageByIdQueryKey, packageId],
+    queryFn: () =>
+      mockQueryFn(async () => {
+        if (isPulpHref) {
+          const response = await client.get({
+            url: packageId,
+            responseType: "json",
+          });
+          return response.data as PythonPythonPackageContentResponse;
+        }
+
+        const response = await contentPythonPackagesList({
+          client,
+          path: {
+            pulp_domain: PULP_DOMAIN,
+          },
+          query: { name: packageId, limit: 1 },
+        });
+        const results = response.data?.results ?? [];
+        return results[results.length - 1] as PythonPythonPackageContentResponse;
+      }, packageMock),
+  };
+};
+
+export const useFetchPackageById = (
+  packageId: string,
+  disableQuery = false,
+) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    ...packageByIdQueryOptions(packageId),
+    enabled: !disableQuery,
+  });
+
+  return {
+    pkg: data,
+    isFetching: isLoading,
+    fetchError: error as AxiosError | null,
+    refetch,
+  };
+};
+
+export const useFetchPackageVersions = (
+  packageName: string,
+  disableQuery = false,
+) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [PackageVersionsQueryKey, packageName],
+    queryFn: () =>
+      mockQueryFn(async () => {
+        const response = await contentPythonPackagesList({
+          client,
+          path: {
+            pulp_domain: PULP_DOMAIN,
+          },
+          query: {
+            name: packageName,
+          },
+        });
+        return response.data;
+      }, packageVersionsMock),
+    enabled: !disableQuery && !!packageName,
+  });
+
+  return {
+    versions: data?.results || [],
+    isFetching: isLoading,
+    fetchError: error as AxiosError | null,
+    refetch,
+  };
+};
+
 export const useFetchPackages = (
   params: HubRequestParams = {},
   disableQuery = false,
@@ -129,26 +208,5 @@ export const useFetchPackages = (
     isFetching: isLoading,
     fetchError: error as AxiosError | null,
     refetch,
-  };
-};
-
-export const packageByIdQueryOptions = (package_href: string) => ({
-  queryKey: [PackagesQueryKey, package_href],
-  queryFn: () =>
-    mockQueryFn(async () => {
-      const response = await contentPythonPackagesRead({
-        client,
-        path: { python_python_package_content_href: package_href },
-      });
-      return response.data;
-    }, packageMock),
-});
-
-export const useFetchPackageById = (id: string) => {
-  const { data, isLoading, error } = useQuery(packageByIdQueryOptions(id));
-  return {
-    pkg: data,
-    isFetching: isLoading,
-    fetchError: error as AxiosError | null,
   };
 };
