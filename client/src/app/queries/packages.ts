@@ -8,7 +8,6 @@ import {
   apiPypiPypiRead,
   apiPypiSimpleRead,
   contentPythonPackagesList,
-  contentPythonPackagesRead,
 } from "@app/client";
 import type { PythonPythonPackageContentResponse } from "@app/client";
 import { PULP_DOMAIN } from "@app/Constants";
