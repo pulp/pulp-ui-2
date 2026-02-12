@@ -15,7 +15,7 @@ export const parseJsonField = <T>(value: unknown, fallback: T): T => {
     }
   }
   return value as T;
-}
+};
 
 export const parseProjectUrls = (
   projectUrls: unknown,
@@ -23,9 +23,7 @@ export const parseProjectUrls = (
   if (!projectUrls || projectUrls === "null") return [];
   try {
     const parsed =
-      typeof projectUrls === "string"
-        ? JSON.parse(projectUrls)
-        : projectUrls;
+      typeof projectUrls === "string" ? JSON.parse(projectUrls) : projectUrls;
 
     if (Array.isArray(parsed)) {
       return parsed
@@ -37,7 +35,7 @@ export const parseProjectUrls = (
           return {
             label: entry.substring(0, commaIndex).trim(),
             url: entry.substring(commaIndex + 1).trim(),
-          }
+          };
         })
         .filter(Boolean) as { label: string; url: string }[];
     }
@@ -52,11 +50,11 @@ export const parseProjectUrls = (
     // Return empty for now...
   }
   return [];
-}
+};
 
 export const parseClassifiers = (classifiers: unknown): string[] => {
   return parseJsonField<string[]>(classifiers, []);
-}
+};
 
 export const groupClassifiers = (
   classifiers: string[],

@@ -8,6 +8,7 @@ import {
   apiPypiPypiRead,
   apiPypiSimpleRead,
   contentPythonPackagesList,
+  contentPythonPackagesRead,
 } from "@app/client";
 import type { PythonPythonPackageContentResponse } from "@app/client";
 import { PULP_DOMAIN } from "@app/Constants";
@@ -128,7 +129,9 @@ export const packageByIdQueryOptions = (packageId: string) => {
           query: { name: packageId, limit: 1 },
         });
         const results = response.data?.results ?? [];
-        return results[results.length - 1] as PythonPythonPackageContentResponse;
+        return results[
+          results.length - 1
+        ] as PythonPythonPackageContentResponse;
       }, packageMock),
   };
 };

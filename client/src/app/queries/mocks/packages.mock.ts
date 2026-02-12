@@ -2545,4 +2545,3 @@ export const uniquePackageMock: UniquePackageMetadataResponse = {
     },
   ],
 };
-

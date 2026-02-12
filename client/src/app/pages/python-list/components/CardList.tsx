@@ -195,9 +195,7 @@ export const CardList: React.FC<ICardListProps> = ({ distribution }) => {
                                   <Content component="h4">{item.name}</Content>
                                 </FlexItem>
                                 <FlexItem>
-                                  <Label isCompact>
-                                    {pkg?.info?.version}
-                                  </Label>
+                                  <Label isCompact>{pkg?.info?.version}</Label>
                                 </FlexItem>
                               </Flex>
                             </CardHeader>
