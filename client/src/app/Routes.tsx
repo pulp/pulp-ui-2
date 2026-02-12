@@ -36,45 +36,50 @@ export const usePathFromParams = (
   return value;
 };
 
-export const AppRoutes = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        path: Paths.python,
-        element: (
-          <LazyRouteElement identifier="python" component={<PythonList />} />
-        ),
-      },
-      {
-        path: Paths.pythonDetails,
-        element: (
-          <LazyRouteElement
-            identifier="advisory-details"
-            component={<PythonDetails />}
-          />
-        ),
-        errorElement: <RouteErrorBoundary />,
-        loader: async ({ params }) => {
-          const packageId = usePathFromParams(params, PathParam.PYTHON_ID);
-          const response = await queryClient.ensureQueryData(
-            packageByIdQueryOptions(packageId),
-          );
-          return {
-            package: response,
-          };
+export const AppRoutes = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      children: [
+        {
+          path: Paths.python,
+          element: (
+            <LazyRouteElement identifier="python" component={<PythonList />} />
+          ),
         },
-      },
-      {
-        path: "*",
-        element: (
-          <LazyRouteElement identifier="not-found" component={<NotFound />} />
-        ),
-      },
-    ],
+        {
+          path: Paths.pythonDetails,
+          element: (
+            <LazyRouteElement
+              identifier="advisory-details"
+              component={<PythonDetails />}
+            />
+          ),
+          errorElement: <RouteErrorBoundary />,
+          loader: async ({ params }) => {
+            const packageId = usePathFromParams(params, PathParam.PYTHON_ID);
+            const response = await queryClient.ensureQueryData(
+              packageByIdQueryOptions(packageId),
+            );
+            return {
+              package: response,
+            };
+          },
+        },
+        {
+          path: "*",
+          element: (
+            <LazyRouteElement identifier="not-found" component={<NotFound />} />
+          ),
+        },
+      ],
+    },
+  ],
+  {
+    basename: import.meta.env.BASE_URL,
   },
-]);
+);
 
 export const useRouteParams = (pathParam: PathParamType) => {
   const params = useParams();
