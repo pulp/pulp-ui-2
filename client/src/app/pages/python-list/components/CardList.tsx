@@ -28,10 +28,7 @@ import {
 import CertificateIcon from "@patternfly/react-icons/dist/esm/icons/certificate-icon";
 import UserIcon from "@patternfly/react-icons/dist/esm/icons/user-icon";
 
-import type {
-  DistributionResponse,
-  PythonPythonPackageContentResponse,
-} from "@app/client";
+import type { DistributionResponse } from "@app/client";
 import { ConditionalDataListBody } from "@app/components/DataListControls/ConditionalDataListBody";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -102,10 +99,11 @@ export const CardList: React.FC<ICardListProps> = ({ distribution }) => {
     sortState: { activeSort, setActiveSort },
   } = tableControls;
 
-  const onClickCard = (item: PythonPythonPackageContentResponse) => {
+  const onClickCard = (packageName: string) => {
     navigate(
       generatePath(Paths.pythonDetails, {
-        pythonId: item.pulp_href ?? "",
+        distributionBasePath: distribution.base_path,
+        pythonId: packageName,
       }),
     );
   };
@@ -189,7 +187,7 @@ export const CardList: React.FC<ICardListProps> = ({ distribution }) => {
                           <>
                             <CardHeader
                               selectableActions={{
-                                onClickAction: () => onClickCard(item),
+                                onClickAction: () => onClickCard(item.name),
                                 selectableActionAriaLabelledby: `${item.name}-card}`,
                               }}
                             >
