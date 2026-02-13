@@ -19,7 +19,10 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeftIcon, CopyIcon } from "@patternfly/react-icons";
 import { DocumentMetadata } from "@app/components/DocumentMetadata";
-import { useFetchUniquePackageMetadata } from "@app/queries/packages";
+import {
+  useFetchUniquePackageMetadata,
+  useFetchPackageContent,
+} from "@app/queries/packages";
 import { PathParam, useRouteParams } from "@app/Routes";
 import { OverviewTab, VersionsTab, FilesTab } from "./components";
 
@@ -38,6 +41,58 @@ export const PythonDetails: React.FC = () => {
     packageVersion: versionParam,
   });
 
+  const { contentPkg } = useFetchPackageContent({
+    name: packageName,
+    version: versionParam,
+  });
+
+  // When a specific version is selected, the Pulp PyPI JSON endpoint still
+  // returns latest-version metadata in `info`. Override with version-accurate
+  // fields from the content API.
+  const rawInfo = pkg?.info;
+  const info = React.useMemo(() => {
+    if (!contentPkg || !rawInfo) return rawInfo;
+
+    const parseJson = <T,>(value: unknown): T | undefined => {
+      if (typeof value === "string") {
+        try {
+          return JSON.parse(value) as T;
+        } catch {
+          return undefined;
+        }
+      }
+      return value as T | undefined;
+    };
+
+    return {
+      ...rawInfo,
+      version: contentPkg.version ?? rawInfo.version,
+      summary: contentPkg.summary ?? rawInfo.summary,
+      description: contentPkg.description ?? rawInfo.description,
+      description_content_type:
+        contentPkg.description_content_type ?? rawInfo.description_content_type,
+      author: contentPkg.author ?? rawInfo.author,
+      author_email: contentPkg.author_email ?? rawInfo.author_email,
+      maintainer: contentPkg.maintainer ?? rawInfo.maintainer,
+      maintainer_email: contentPkg.maintainer_email ?? rawInfo.maintainer_email,
+      license: contentPkg.license ?? rawInfo.license,
+      license_expression:
+        contentPkg.license_expression ?? rawInfo.license_expression,
+      requires_python: contentPkg.requires_python ?? rawInfo.requires_python,
+      home_page: contentPkg.home_page ?? rawInfo.home_page,
+      keywords: contentPkg.keywords ?? rawInfo.keywords,
+      classifiers:
+        parseJson<string[]>(contentPkg.classifiers) ?? rawInfo.classifiers,
+      requires_dist:
+        parseJson<string[]>(contentPkg.requires_dist) ?? rawInfo.requires_dist,
+      project_urls:
+        parseJson<Record<string, string>>(contentPkg.project_urls) ??
+        rawInfo.project_urls,
+    };
+  }, [contentPkg, rawInfo]);
+
+  const releases = pkg?.releases;
+
   if (isFetching) {
     return (
       <PageSection>
@@ -48,7 +103,7 @@ export const PythonDetails: React.FC = () => {
     );
   }
 
-  if (!pkg?.info) {
+  if (!info) {
     return (
       <PageSection>
         <h1>No package found</h1>
@@ -56,7 +111,9 @@ export const PythonDetails: React.FC = () => {
     );
   }
 
-  const { info, releases } = pkg;
+  // The Pulp server's version-specific PyPI JSON endpoint always returns the
+  // latest version in info.version, so we fall back to the query-param value.
+  const currentVersion = versionParam ?? info.version ?? "";
   const classifiers = info.classifiers ?? [];
 
   return (
@@ -92,7 +149,7 @@ export const PythonDetails: React.FC = () => {
                   </FlexItem>
                   <FlexItem>
                     <Label color="blue" isCompact>
-                      v{info.version}
+                      v{currentVersion}
                     </Label>
                   </FlexItem>
                 </Flex>
@@ -125,11 +182,11 @@ export const PythonDetails: React.FC = () => {
               icon={<CopyIcon />}
               onClick={() => {
                 navigator.clipboard.writeText(
-                  `pip install ${info.name}==${info.version}`,
+                  `pip install ${info.name}==${currentVersion}`,
                 );
               }}
             >
-              pip install {info.name}=={info.version}
+              pip install {info.name}=={currentVersion}
             </Button>
           </FlexItem>
         </Flex>
@@ -151,7 +208,7 @@ export const PythonDetails: React.FC = () => {
               <TabContentBody hasPadding>
                 <VersionsTab
                   releases={releases ?? {}}
-                  currentVersion={info.version ?? ""}
+                  currentVersion={currentVersion}
                   distributionBasePath={distributionBasePath}
                   packageName={info.name ?? ""}
                 />
@@ -163,7 +220,7 @@ export const PythonDetails: React.FC = () => {
               <TabContentBody hasPadding>
                 <FilesTab
                   releases={releases ?? {}}
-                  currentVersion={info.version ?? ""}
+                  currentVersion={currentVersion}
                 />
               </TabContentBody>
             </TabContent>
