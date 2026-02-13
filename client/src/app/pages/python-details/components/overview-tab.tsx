@@ -7,15 +7,15 @@ import {
   Title,
 } from "@patternfly/react-core";
 import Markdown from "react-markdown";
-import type { PythonPythonPackageContentResponse } from "@app/client";
+import type { UniquePackageMetadataResponse } from "@app/api/models";
 import { MetadataSidebar } from "./metadata-sidebar";
 
 interface OverviewTabProps {
-  pkg: PythonPythonPackageContentResponse;
+  info: NonNullable<UniquePackageMetadataResponse["info"]>;
 }
 
-export const OverviewTab: React.FC<OverviewTabProps> = ({ pkg }) => {
-  const description = pkg.description ?? "No description available.";
+export const OverviewTab: React.FC<OverviewTabProps> = ({ info }) => {
+  const description = info.description ?? "No description available.";
 
   return (
     <Grid hasGutter>
@@ -38,12 +38,12 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ pkg }) => {
           clickTip="Copied"
           style={{ marginTop: "0.5rem" }}
         >
-          pip install {pkg.name ?? ""}
+          pip install {info.name ?? ""}
         </ClipboardCopy>
       </GridItem>
 
       <GridItem span={12} lg={3}>
-        <MetadataSidebar pkg={pkg} />
+        <MetadataSidebar info={info} />
       </GridItem>
     </Grid>
   );

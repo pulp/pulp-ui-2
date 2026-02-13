@@ -16,21 +16,27 @@ import {
   TabTitleText,
   Title,
 } from "@patternfly/react-core";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeftIcon, CopyIcon } from "@patternfly/react-icons";
 import { DocumentMetadata } from "@app/components/DocumentMetadata";
-import { useFetchPackageById } from "@app/queries/packages";
+import { useFetchUniquePackageMetadata } from "@app/queries/packages";
 import { PathParam, useRouteParams } from "@app/Routes";
-import { parseClassifiers } from "./helpers";
 import { OverviewTab, VersionsTab, FilesTab } from "./components";
 
 export const PythonDetails: React.FC = () => {
-  const pythonId = useRouteParams(PathParam.PYTHON_ID);
+  const distributionBasePath = useRouteParams(PathParam.DISTRIBUTION_BASE_PATH);
+  const packageName = useRouteParams(PathParam.PYTHON_ID);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const versionParam = searchParams.get("version") ?? undefined;
 
   const [activeTabKey, setActiveTabKey] = React.useState<number>(0);
 
-  const { pkg, isFetching } = useFetchPackageById(pythonId);
+  const { pkg, isFetching } = useFetchUniquePackageMetadata({
+    distributionPath: distributionBasePath,
+    packageName,
+    packageVersion: versionParam,
+  });
 
   if (isFetching) {
     return (
@@ -42,7 +48,7 @@ export const PythonDetails: React.FC = () => {
     );
   }
 
-  if (!pkg) {
+  if (!pkg?.info) {
     return (
       <PageSection>
         <h1>No package found</h1>
@@ -50,11 +56,12 @@ export const PythonDetails: React.FC = () => {
     );
   }
 
-  const classifiers = parseClassifiers(pkg.classifiers);
+  const { info, releases } = pkg;
+  const classifiers = info.classifiers ?? [];
 
   return (
     <>
-      <DocumentMetadata title={pkg.name ?? "Python"} />
+      <DocumentMetadata title={info.name ?? "Python"} />
       <PageSection variant={PageSectionVariants.default}>
         <Button
           variant="link"
@@ -80,30 +87,34 @@ export const PythonDetails: React.FC = () => {
                 >
                   <FlexItem>
                     <Title headingLevel="h1" size="2xl">
-                      {pkg.name}
+                      {info.name}
                     </Title>
                   </FlexItem>
                   <FlexItem>
                     <Label color="blue" isCompact>
-                      v{pkg.version}
+                      v{info.version}
                     </Label>
                   </FlexItem>
                 </Flex>
               </FlexItem>
               <FlexItem>
                 <p style={{ fontSize: "var(--pf-v6-global--FontSize--lg)" }}>
-                  {pkg.summary}
+                  {info.summary}
                 </p>
               </FlexItem>
               <FlexItem>
                 <Flex spaceItems={{ default: "spaceItemsSm" }}>
-                  {classifiers.slice(0, 5).map((tag) => (
-                    <FlexItem key={tag}>
-                      <Label color="grey" isCompact>
-                        #{tag}
-                      </Label>
-                    </FlexItem>
-                  ))}
+                  {classifiers.slice(0, 5).map((tag) => {
+                    const parts = tag.split(" :: ");
+                    const shortTag = parts[parts.length - 1];
+                    return (
+                      <FlexItem key={tag}>
+                        <Label color="grey" isCompact>
+                          #{shortTag}
+                        </Label>
+                      </FlexItem>
+                    );
+                  })}
                 </Flex>
               </FlexItem>
             </Flex>
@@ -114,11 +125,11 @@ export const PythonDetails: React.FC = () => {
               icon={<CopyIcon />}
               onClick={() => {
                 navigator.clipboard.writeText(
-                  `pip install ${pkg.name}==${pkg.version}`,
+                  `pip install ${info.name}==${info.version}`,
                 );
               }}
             >
-              pip install {pkg.name}=={pkg.version}
+              pip install {info.name}=={info.version}
             </Button>
           </FlexItem>
         </Flex>
@@ -131,7 +142,7 @@ export const PythonDetails: React.FC = () => {
           <Tab eventKey={0} title={<TabTitleText>Overview</TabTitleText>}>
             <TabContent>
               <TabContentBody hasPadding>
-                <OverviewTab pkg={pkg} />
+                <OverviewTab info={info} />
               </TabContentBody>
             </TabContent>
           </Tab>
@@ -139,8 +150,10 @@ export const PythonDetails: React.FC = () => {
             <TabContent>
               <TabContentBody hasPadding>
                 <VersionsTab
-                  packageName={pkg.name ?? ""}
-                  currentVersion={pkg.version ?? ""}
+                  releases={releases ?? {}}
+                  currentVersion={info.version ?? ""}
+                  distributionBasePath={distributionBasePath}
+                  packageName={info.name ?? ""}
                 />
               </TabContentBody>
             </TabContent>
@@ -149,8 +162,8 @@ export const PythonDetails: React.FC = () => {
             <TabContent>
               <TabContentBody hasPadding>
                 <FilesTab
-                  packageName={pkg.name ?? ""}
-                  currentVersion={pkg.version ?? ""}
+                  releases={releases ?? {}}
+                  currentVersion={info.version ?? ""}
                 />
               </TabContentBody>
             </TabContent>

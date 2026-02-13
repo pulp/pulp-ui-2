@@ -13,26 +13,23 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { InfoCircleIcon, ExternalLinkAltIcon } from "@patternfly/react-icons";
-import type { PythonPythonPackageContentResponse } from "@app/client";
-import {
-  groupClassifiers,
-  parseClassifiers,
-  parseProjectUrls,
-  truncateLicense,
-} from "../helpers";
+import type { UniquePackageMetadataResponse } from "@app/api/models";
+import { groupClassifiers, truncateLicense } from "../helpers";
 
 interface MetadataSidebarProps {
-  pkg: PythonPythonPackageContentResponse;
+  info: NonNullable<UniquePackageMetadataResponse["info"]>;
 }
 
-export const MetadataSidebar: React.FC<MetadataSidebarProps> = ({ pkg }) => {
-  const homePageUrl = pkg.home_page?.trim() || "";
-  const classifiers = parseClassifiers(pkg.classifiers);
+export const MetadataSidebar: React.FC<MetadataSidebarProps> = ({ info }) => {
+  const homePageUrl = info.home_page?.trim() || "";
+  const classifiers = info.classifiers ?? [];
   const grouped = groupClassifiers(classifiers);
-  const author = pkg.author || pkg.author_email || "Unknown";
-  const licenseText = pkg.license_expression || pkg.license || "";
+  const author = info.author || info.author_email || "Unknown";
+  const licenseText = info.license_expression || info.license || "";
 
-  const projectUrlEntries = parseProjectUrls(pkg.project_urls);
+  const projectUrlEntries = Object.entries(info.project_urls ?? {}).map(
+    ([label, url]) => ({ label, url: String(url) }),
+  );
 
   const allLinks = [
     ...(homePageUrl ? [{ label: "Homepage", url: homePageUrl }] : []),
@@ -79,19 +76,19 @@ export const MetadataSidebar: React.FC<MetadataSidebarProps> = ({ pkg }) => {
                   {author}
                 </DescriptionListDescription>
               </DescriptionListGroup>
-              {(pkg.maintainer || pkg.maintainer_email) && (
+              {(info.maintainer || info.maintainer_email) && (
                 <DescriptionListGroup>
                   <DescriptionListTerm>Maintainer</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {pkg.maintainer || pkg.maintainer_email}
+                    {info.maintainer || info.maintainer_email}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               )}
-              {pkg.requires_python && (
+              {info.requires_python && (
                 <DescriptionListGroup>
                   <DescriptionListTerm>Requires Python</DescriptionListTerm>
                   <DescriptionListDescription>
-                    {pkg.requires_python}
+                    {info.requires_python}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               )}

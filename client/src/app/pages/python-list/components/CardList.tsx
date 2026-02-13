@@ -102,6 +102,7 @@ export const CardList: React.FC<ICardListProps> = ({ distribution }) => {
   const onClickCard = (packageName: string) => {
     navigate(
       generatePath(Paths.pythonDetails, {
+        distributionBasePath: distribution.base_path,
         pythonId: packageName,
       }),
     );

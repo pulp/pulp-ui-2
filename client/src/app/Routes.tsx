@@ -6,13 +6,14 @@ import { LazyRouteElement } from "@app/components/LazyRouteElement";
 import App from "./App";
 import { RouteErrorBoundary } from "./components/RouteErrorBoundary";
 import { queryClient } from "./queries/config";
-import { packageByIdQueryOptions } from "./queries/packages";
+import { packageMetadataQueryOptions } from "./queries/packages";
 
 const PythonList = lazy(() => import("./pages/python-list"));
 const PythonDetails = lazy(() => import("./pages/python-details"));
 const NotFound = lazy(() => import("./pages/not-found"));
 
 export const PathParam = {
+  DISTRIBUTION_BASE_PATH: "distributionBasePath",
   PYTHON_ID: "pythonId",
 } as const;
 
@@ -20,7 +21,7 @@ type PathParamType = (typeof PathParam)[keyof typeof PathParam];
 
 export const Paths = {
   python: "/",
-  pythonDetails: `/:${PathParam.PYTHON_ID}`,
+  pythonDetails: `/:${PathParam.DISTRIBUTION_BASE_PATH}/:${PathParam.PYTHON_ID}`,
 } as const;
 
 export const usePathFromParams = (
@@ -57,10 +58,20 @@ export const AppRoutes = createBrowserRouter(
             />
           ),
           errorElement: <RouteErrorBoundary />,
-          loader: async ({ params }) => {
-            const packageId = usePathFromParams(params, PathParam.PYTHON_ID);
+          loader: async ({ params, request }) => {
+            const distributionBasePath = usePathFromParams(
+              params,
+              PathParam.DISTRIBUTION_BASE_PATH,
+            );
+            const packageName = usePathFromParams(params, PathParam.PYTHON_ID);
+            const url = new URL(request.url);
+            const version = url.searchParams.get("version") ?? undefined;
             const response = await queryClient.ensureQueryData(
-              packageByIdQueryOptions(packageId),
+              packageMetadataQueryOptions(
+                distributionBasePath,
+                packageName,
+                version,
+              ),
             );
             return {
               package: response,

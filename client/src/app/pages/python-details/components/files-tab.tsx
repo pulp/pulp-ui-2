@@ -10,38 +10,28 @@ import {
   DescriptionListTerm,
   DescriptionListDescription,
   Label,
-  Bullseye,
   EmptyState,
   EmptyStateBody,
   Flex,
   FlexItem,
-  Spinner,
 } from "@patternfly/react-core";
-import { useFetchPackageVersions } from "@app/queries/packages";
+import type { UniquePackageMetadataResponse } from "@app/api/models";
 import prettyBytes from "pretty-bytes";
 
+type ReleaseFiles = NonNullable<UniquePackageMetadataResponse["releases"]>;
+
 interface FilesTabProps {
-  packageName: string;
+  releases: ReleaseFiles;
   currentVersion: string;
 }
 
 export const FilesTab: React.FC<FilesTabProps> = ({
-  packageName,
+  releases,
   currentVersion,
 }) => {
-  const { versions, isFetching } = useFetchPackageVersions(packageName);
-
   const files = useMemo(() => {
-    return versions.filter((item) => item.version === currentVersion);
-  }, [versions, currentVersion]);
-
-  if (isFetching) {
-    return (
-      <Bullseye style={{ padding: "2rem 0" }}>
-        <Spinner aria-label="Loading files" />
-      </Bullseye>
-    );
-  }
+    return releases[currentVersion] ?? [];
+  }, [releases, currentVersion]);
 
   if (files.length === 0) {
     return (
@@ -67,7 +57,7 @@ export const FilesTab: React.FC<FilesTabProps> = ({
         style={{ marginTop: "1.5rem" }}
       >
         {files.map((file) => (
-          <FlexItem key={file.sha256 ?? file.filename}>
+          <FlexItem key={file.digests?.sha256 ?? file.filename}>
             <Card isCompact>
               <CardBody>
                 <Title headingLevel="h4" size="md">
@@ -101,7 +91,7 @@ export const FilesTab: React.FC<FilesTabProps> = ({
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                   )}
-                  {file.sha256 && (
+                  {file.digests?.sha256 && (
                     <DescriptionListGroup>
                       <DescriptionListTerm>SHA256</DescriptionListTerm>
                       <DescriptionListDescription>
@@ -111,7 +101,7 @@ export const FilesTab: React.FC<FilesTabProps> = ({
                           clickTip="Copied"
                           variant="inline-compact"
                         >
-                          {file.sha256}
+                          {file.digests.sha256}
                         </ClipboardCopy>
                       </DescriptionListDescription>
                     </DescriptionListGroup>

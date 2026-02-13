@@ -4,40 +4,47 @@ import {
   Title,
   Label,
   Button,
-  Bullseye,
   EmptyState,
   EmptyStateBody,
-  Spinner,
 } from "@patternfly/react-core";
 import { Table, Thead, Tr, Th, Tbody, Td } from "@patternfly/react-table";
 import { generatePath, useNavigate } from "react-router-dom";
 import { Paths } from "@app/Routes";
-import { useFetchPackageVersions } from "@app/queries/packages";
+import type { UniquePackageMetadataResponse } from "@app/api/models";
 import prettyBytes from "pretty-bytes";
 
+type ReleaseFiles = NonNullable<UniquePackageMetadataResponse["releases"]>;
+
 interface VersionsTabProps {
-  packageName: string;
+  releases: ReleaseFiles;
   currentVersion: string;
+  distributionBasePath: string;
+  packageName: string;
 }
 
 export const VersionsTab: React.FC<VersionsTabProps> = ({
-  packageName,
+  releases,
   currentVersion,
+  distributionBasePath,
+  packageName,
 }) => {
   const navigate = useNavigate();
-  const { versions, isFetching } = useFetchPackageVersions(packageName);
 
   const versionEntries = useMemo(() => {
-    return [...versions].reverse();
-  }, [versions]);
-
-  if (isFetching) {
-    return (
-      <Bullseye style={{ padding: "2rem 0" }}>
-        <Spinner aria-label="Loading versions" />
-      </Bullseye>
-    );
-  }
+    return Object.entries(releases)
+      .map(([version, files]) => {
+        const firstFile = files[0];
+        const totalSize = files.reduce((sum, f) => sum + (f.size ?? 0), 0);
+        return {
+          version,
+          pythonVersion: firstFile?.python_version ?? "N/A",
+          requiresPython: firstFile?.requires_python ?? "N/A",
+          uploadDate: firstFile?.upload_time_iso_8601 ?? firstFile?.upload_time,
+          size: totalSize,
+        };
+      })
+      .reverse();
+  }, [releases]);
 
   if (versionEntries.length === 0) {
     return (
@@ -81,11 +88,12 @@ export const VersionsTab: React.FC<VersionsTabProps> = ({
     );
   };
 
-  const navigateToVersion = (pulpHref: string) => {
+  const navigateToVersion = (version: string) => {
     navigate(
-      generatePath(Paths.pythonDetails, {
-        pythonId: pulpHref,
-      }),
+      `${generatePath(Paths.pythonDetails, {
+        distributionBasePath,
+        pythonId: packageName,
+      })}?version=${encodeURIComponent(version)}`,
     );
   };
 
@@ -114,11 +122,10 @@ export const VersionsTab: React.FC<VersionsTabProps> = ({
         </Thead>
         <Tbody>
           {versionEntries.map((item) => {
-            const version = item.version ?? "";
-            const isCurrentVersion = version === currentVersion;
+            const isCurrentVersion = item.version === currentVersion;
             return (
               <Tr
-                key={item.pulp_href ?? version}
+                key={item.version}
                 style={
                   isCurrentVersion
                     ? {
@@ -132,12 +139,12 @@ export const VersionsTab: React.FC<VersionsTabProps> = ({
                   <Button
                     variant="link"
                     isInline
-                    onClick={() => navigateToVersion(item.pulp_href ?? "")}
+                    onClick={() => navigateToVersion(item.version)}
                     style={{
                       fontWeight: isCurrentVersion ? "bold" : "normal",
                     }}
                   >
-                    {version}
+                    {item.version}
                   </Button>
                   {isCurrentVersion && (
                     <Label
@@ -149,7 +156,9 @@ export const VersionsTab: React.FC<VersionsTabProps> = ({
                     </Label>
                   )}
                 </Td>
-                <Td dataLabel="Release Type">{getStabilityLabel(version)}</Td>
+                <Td dataLabel="Release Type">
+                  {getStabilityLabel(item.version)}
+                </Td>
                 <Td dataLabel="Python Version">
                   <code
                     style={{
@@ -161,18 +170,16 @@ export const VersionsTab: React.FC<VersionsTabProps> = ({
                       fontFamily: "var(--pf-v6-global--FontFamily--monospace)",
                     }}
                   >
-                    {item.python_version ?? "N/A"}
+                    {item.pythonVersion}
                   </code>
                 </Td>
-                <Td dataLabel="Requires Python">
-                  {item.requires_python ?? "N/A"}
-                </Td>
+                <Td dataLabel="Requires Python">{item.requiresPython}</Td>
                 <Td dataLabel="Upload Date">
-                  {item.pulp_created
-                    ? new Date(item.pulp_created).toLocaleDateString()
+                  {item.uploadDate
+                    ? new Date(item.uploadDate).toLocaleDateString()
                     : "N/A"}
                 </Td>
-                <Td dataLabel="Size">{prettyBytes(item.size ?? 0)}</Td>
+                <Td dataLabel="Size">{prettyBytes(item.size)}</Td>
               </Tr>
             );
           })}
