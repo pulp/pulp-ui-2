@@ -20,7 +20,6 @@ import {
 export const UniquePackagesQueryKey = "unique-packages";
 export const PackagesQueryKey = "packages";
 export const PackageByIdQueryKey = "package-by-id";
-export const PackageMetadataQueryKey = "package-metadata";
 export const PackageContentQueryKey = "package-content";
 
 export const useFetchUniquePackages = (
@@ -99,33 +98,6 @@ export const useFetchUniquePackageMetadata = (
     isFetching: isLoading,
     fetchError: error as AxiosError | null,
     refetch,
-  };
-};
-
-export const packageMetadataQueryOptions = (
-  distributionPath: string,
-  packageName: string,
-  packageVersion?: string,
-) => {
-  const meta = !packageVersion
-    ? `${packageName}/json`
-    : `${packageName}/${packageVersion}/json`;
-
-  return {
-    queryKey: [
-      PackageMetadataQueryKey,
-      distributionPath,
-      packageName,
-      packageVersion,
-    ],
-    queryFn: () =>
-      mockQueryFn(async () => {
-        const response = await client.get({
-          url: `/api/pypi/${PULP_DOMAIN}/${distributionPath}/pypi/${meta}/`,
-          responseType: "json",
-        });
-        return response.data as UniquePackageMetadataResponse;
-      }, uniquePackageMock),
   };
 };
 

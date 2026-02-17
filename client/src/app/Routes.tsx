@@ -5,8 +5,6 @@ import { LazyRouteElement } from "@app/components/LazyRouteElement";
 
 import App from "./App";
 import { RouteErrorBoundary } from "./components/RouteErrorBoundary";
-import { queryClient } from "./queries/config";
-import { packageMetadataQueryOptions } from "./queries/packages";
 
 const PythonList = lazy(() => import("./pages/python-list"));
 const PythonDetails = lazy(() => import("./pages/python-details"));
@@ -58,25 +56,6 @@ export const AppRoutes = createBrowserRouter(
             />
           ),
           errorElement: <RouteErrorBoundary />,
-          loader: async ({ params, request }) => {
-            const distributionBasePath = usePathFromParams(
-              params,
-              PathParam.DISTRIBUTION_BASE_PATH,
-            );
-            const packageName = usePathFromParams(params, PathParam.PYTHON_ID);
-            const url = new URL(request.url);
-            const version = url.searchParams.get("version") ?? undefined;
-            const response = await queryClient.ensureQueryData(
-              packageMetadataQueryOptions(
-                distributionBasePath,
-                packageName,
-                version,
-              ),
-            );
-            return {
-              package: response,
-            };
-          },
         },
         {
           path: "*",
