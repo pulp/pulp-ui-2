@@ -67,13 +67,11 @@ export const AppRoutes = createBrowserRouter(
             const url = new URL(request.url);
             const version = url.searchParams.get("version") ?? undefined;
             const response = await queryClient.ensureQueryData(
-              uniquePackageMetadataQueryOptions(
-                {
-                  distributionPath: distributionBasePath,
-                  packageName,
-                  packageVersion: version
-                }
-              ),
+              uniquePackageMetadataQueryOptions({
+                distributionPath: distributionBasePath,
+                packageName,
+                packageVersion: version,
+              }),
             );
             return {
               package: response,

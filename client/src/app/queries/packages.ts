@@ -7,7 +7,11 @@ import { client } from "@app/axios-config/apiInit";
 import type { PythonPythonPackageContentResponse } from "@app/client";
 import { apiPypiSimpleRead, contentPythonPackagesList } from "@app/client";
 import { PULP_DOMAIN } from "@app/Constants";
-import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { mockQueryFn } from "./helpers";
 import {
@@ -82,13 +86,11 @@ export const useFetchUniquePackageMetadata = (
   };
 };
 
-export const useSuspenseUniquePackageMetadata = (
-  args: {
-    distributionPath: string;
-    packageName: string;
-    packageVersion?: string;
-  }
-) => {
+export const useSuspenseUniquePackageMetadata = (args: {
+  distributionPath: string;
+  packageName: string;
+  packageVersion?: string;
+}) => {
   const { data, isLoading, error, refetch } = useSuspenseQuery({
     ...uniquePackageMetadataQueryOptions(args),
   });
@@ -100,13 +102,11 @@ export const useSuspenseUniquePackageMetadata = (
   };
 };
 
-export const uniquePackageMetadataQueryOptions = (
-  args: {
-    distributionPath: string;
-    packageName: string;
-    packageVersion?: string;
-  },
-) => {
+export const uniquePackageMetadataQueryOptions = (args: {
+  distributionPath: string;
+  packageName: string;
+  packageVersion?: string;
+}) => {
   const { distributionPath, packageName, packageVersion } = args;
 
   const meta = !packageVersion
