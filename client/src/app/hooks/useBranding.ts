@@ -17,23 +17,22 @@ export const useBranding = (): BrandingStrings => {
         ...brandingStrings.masthead,
         leftBrand: brandingStrings.masthead.leftBrand
           ? {
-            ...brandingStrings.masthead.leftBrand,
-            src:
-              // Use dark mode branding if they exist,
-              // default to original source branding if not.
-              brandingStrings.masthead.leftBrand.darkModeSrc ||
-              brandingStrings.masthead.leftBrand.src,
-
-          }
-          : undefined
+              ...brandingStrings.masthead.leftBrand,
+              src:
+                // Use dark mode branding if they exist,
+                // default to original source branding if not.
+                brandingStrings.masthead.leftBrand.darkModeSrc ||
+                brandingStrings.masthead.leftBrand.src,
+            }
+          : undefined,
       },
       about: {
         ...brandingStrings.about,
         imageSrc:
           brandingStrings.about.darkModeImageSrc ||
           brandingStrings.about.imageSrc,
-      }
-    }
+      },
+    };
   }, [isDark]);
 };
 
