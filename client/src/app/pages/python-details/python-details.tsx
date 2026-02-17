@@ -24,7 +24,12 @@ import {
   useFetchPackageContent,
 } from "@app/queries/packages";
 import { PathParam, useRouteParams } from "@app/Routes";
-import { OverviewTab, VersionsTab, FilesTab } from "./components";
+import {
+  OverviewTab,
+  VersionsTab,
+  FilesTab,
+  PackageSearchBar,
+} from "./components";
 
 export const PythonDetails: React.FC = () => {
   const distributionBasePath = useRouteParams(PathParam.DISTRIBUTION_BASE_PATH);
@@ -119,6 +124,19 @@ export const PythonDetails: React.FC = () => {
   return (
     <>
       <DocumentMetadata title={info.name ?? "Python"} />
+      <PageSection
+        style={{
+          backgroundColor: "var(--pf-v6-global--palette--blue-400)",
+          paddingBlock: "var(--pf-v6-global--spacer--md)",
+        }}
+      >
+        <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+          <PackageSearchBar
+            distributionBasePath={distributionBasePath}
+            currentPackageName={packageName}
+          />
+        </div>
+      </PageSection>
       <PageSection variant={PageSectionVariants.default}>
         <Button
           variant="link"
