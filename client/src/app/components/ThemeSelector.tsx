@@ -63,7 +63,7 @@ export const ThemeSelector: React.FC = () => {
     _event?: React.MouseEvent,
     selectedMode?: string,
   ) => {
-    setMode((selectedMode as ThemeMode | null) ?? "system");
+    setMode((selectedMode as ThemeMode | undefined) ?? "system");
     setIsOpen(false);
   };
 
