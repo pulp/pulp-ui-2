@@ -32,7 +32,7 @@ interface ThemeState {
 
 export const ThemeContext = React.createContext<ThemeState>({
   mode: "system",
-  setMode: () => { },
+  setMode: () => {},
   isDark: false,
 });
 
