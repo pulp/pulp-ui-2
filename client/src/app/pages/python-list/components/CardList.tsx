@@ -33,6 +33,7 @@ import type { DistributionResponse } from "@app/client";
 import { ConditionalDataListBody } from "@app/components/DataListControls/ConditionalDataListBody";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
+import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchUniquePackages } from "@app/queries/packages";
 import { Paths } from "@app/Routes";
@@ -56,7 +57,13 @@ export const CardList: React.FC<ICardListProps> = ({ distribution }) => {
 
   // Table
   const tableControls = useLocalTableControls({
+    persistenceKeyPrefix: TablePersistenceKeyPrefixes.python_wheels,
     tableName: "python-table",
+    persistTo: {
+      filter: "urlParams",
+      pagination: "sessionStorage",
+      sort: "sessionStorage",
+    },
     idProperty: "name",
     items: packages,
     isLoading: isFetching,

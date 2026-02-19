@@ -33,7 +33,12 @@ import {
   useRouteParams,
 } from "@app/Routes";
 
-import { FilesTab, OverviewTab, VersionsTab } from "./components";
+import {
+  FilesTab,
+  OverviewTab,
+  PackageSearchBar,
+  VersionsTab,
+} from "./components";
 
 export const PythonDetails: React.FC = () => {
   const distributionBasePath = useRouteParams(PathParam.DISTRIBUTION_BASE_PATH);
@@ -129,33 +134,31 @@ export const PythonDetails: React.FC = () => {
     <>
       <DocumentMetadata title={info.name ?? "Python"} />
       <PageSection type="breadcrumb">
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link
-              to={{
-                pathname: Paths.python,
-                search: `?${distributionBasePathQueryParam}=${distributionBasePath}`,
-              }}
-            >
-              Packages
-            </Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem isActive>Package details</BreadcrumbItem>
-        </Breadcrumb>
+        <Flex>
+          <Flex flex={{ default: "flex_1" }}>
+            <FlexItem>
+              <Breadcrumb>
+                <BreadcrumbItem>
+                  <Link
+                    to={{
+                      pathname: Paths.python,
+                      search: `?${distributionBasePathQueryParam}=${distributionBasePath}`,
+                    }}
+                  >
+                    Packages
+                  </Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem isActive>Package details</BreadcrumbItem>
+              </Breadcrumb>
+            </FlexItem>
+          </Flex>
+          <Flex flex={{ default: "flex_2" }}>
+            <FlexItem>
+              <PackageSearchBar distributionBasePath={distributionBasePath} />
+            </FlexItem>
+          </Flex>
+        </Flex>
       </PageSection>
-        <PageSection
-            style={{
-                backgroundColor: "var(--pf-v6-global--palette--blue-400)",
-                paddingBlock: "var(--pf-v6-global--spacer--md)",
-            }}
-        >
-            <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-                <PackageSearchBar
-                    distributionBasePath={distributionBasePath}
-                    currentPackageName={packageName}
-                />
-            </div>
-        </PageSection>
       <PageSection variant={PageSectionVariants.default}>
         <Flex
           justifyContent={{ default: "justifyContentSpaceBetween" }}
