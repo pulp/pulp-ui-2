@@ -229,14 +229,14 @@ export const PythonDetails: React.FC = () => {
           onSelect={(_event, tabIndex) => setActiveTabKey(tabIndex as number)}
         >
           <Tab eventKey={0} title={<TabTitleText>Overview</TabTitleText>}>
-            <TabContent>
+            <TabContent id="info-tab-section">
               <TabContentBody hasPadding>
                 <OverviewTab info={info} />
               </TabContentBody>
             </TabContent>
           </Tab>
           <Tab eventKey={1} title={<TabTitleText>Versions</TabTitleText>}>
-            <TabContent>
+            <TabContent id="versions-tab-section">
               <TabContentBody hasPadding>
                 <VersionsTab
                   releases={releases ?? {}}
@@ -248,7 +248,7 @@ export const PythonDetails: React.FC = () => {
             </TabContent>
           </Tab>
           <Tab eventKey={2} title={<TabTitleText>Files</TabTitleText>}>
-            <TabContent>
+            <TabContent id="files-tab-section">
               <TabContentBody hasPadding>
                 <FilesTab
                   releases={releases ?? {}}
