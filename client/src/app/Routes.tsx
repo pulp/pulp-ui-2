@@ -6,7 +6,7 @@ import { LazyRouteElement } from "@app/components/LazyRouteElement";
 import App from "./App";
 import { RouteErrorBoundary } from "./components/RouteErrorBoundary";
 import { queryClient } from "./queries/config";
-import { packageMetadataQueryOptions } from "./queries/packages";
+import { uniquePackageMetadataQueryOptions } from "./queries/packages";
 
 const PythonList = lazy(() => import("./pages/python-list"));
 const PythonDetails = lazy(() => import("./pages/python-details"));
@@ -23,6 +23,8 @@ export const Paths = {
   python: "/",
   pythonDetails: `/:${PathParam.DISTRIBUTION_BASE_PATH}/:${PathParam.PYTHON_ID}`,
 } as const;
+
+export const distributionBasePathQueryParam = "distribution";
 
 export const usePathFromParams = (
   params: Params<string>,
@@ -67,11 +69,11 @@ export const AppRoutes = createBrowserRouter(
             const url = new URL(request.url);
             const version = url.searchParams.get("version") ?? undefined;
             const response = await queryClient.ensureQueryData(
-              packageMetadataQueryOptions(
-                distributionBasePath,
+              uniquePackageMetadataQueryOptions({
+                distributionPath: distributionBasePath,
                 packageName,
-                version,
-              ),
+                packageVersion: version,
+              }),
             );
             return {
               package: response,

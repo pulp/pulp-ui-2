@@ -2,15 +2,18 @@ import type React from "react";
 import { Outlet } from "react-router-dom";
 
 import { DefaultLayout } from "./layout";
+import { ThemeProvider } from "./components/ThemeContext";
 
 import "@patternfly/patternfly/patternfly-addons.css";
 import "@patternfly/patternfly/patternfly.css";
 
 const App: React.FC = () => {
   return (
-    <DefaultLayout>
-      <Outlet />
-    </DefaultLayout>
+    <ThemeProvider>
+      <DefaultLayout>
+        <Outlet />
+      </DefaultLayout>
+    </ThemeProvider>
   );
 };
 
