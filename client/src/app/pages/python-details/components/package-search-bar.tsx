@@ -16,7 +16,7 @@ export const PackageSearchBar: React.FC<PackageSearchBarProps> = ({
 
   const onSearch = () => {
     if (!value) return;
-    
+
     navigate(
       getPackagesFilteredByDistributionAndText({
         distributionPath: distributionBasePath,
