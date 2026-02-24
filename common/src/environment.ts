@@ -64,7 +64,7 @@ export const buildPulpEnv = ({
   PULP_API_URL,
   PULP_USERNAME,
   PULP_PASSWORD,
-  PULP_DOMAIN = "calunga-ui-dev",
+  PULP_DOMAIN = "public-trusted-libraries-ui-dev",
 
   BRANDING,
 }: Partial<PulpEnvType> = {}): PulpEnvType => ({

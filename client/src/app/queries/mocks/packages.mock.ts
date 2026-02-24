@@ -9,7 +9,7 @@ import type {
 
 export const packageMock: PythonPythonPackageContentResponse = {
   pulp_href:
-    "/api/pulp/calunga-ui-dev/api/v3/content/python/packages/019c24e4-8d46-75b2-b2fb-68fb77a67df0/",
+    "/api/pulp/public-trusted-libraries-ui-dev/api/v3/content/python/packages/019c24e4-8d46-75b2-b2fb-68fb77a67df0/",
   prn: "prn:python.pythonpackagecontent:019c24e4-8d46-75b2-b2fb-68fb77a67df0",
   pulp_created: "2026-02-03T19:04:58.854549Z",
   pulp_last_updated: "2026-02-03T19:04:58.854591Z",
@@ -68,7 +68,7 @@ export const packageVersionsMock: PaginatedpythonPythonPackageContentResponseLis
     results: [
       {
         pulp_href:
-          "/api/pulp/calunga-ui-dev/api/v3/content/python/packages/019c24e4-0001-0000-0000-000000000001/",
+          "/api/pulp/public-trusted-libraries-ui-dev/api/v3/content/python/packages/019c24e4-0001-0000-0000-000000000001/",
         prn: "prn:python.pythonpackagecontent:019c24e4-0001-0000-0000-000000000001",
         pulp_created: "2026-01-15T10:00:00.000000Z",
         pulp_last_updated: "2026-01-15T10:00:00.000000Z",
@@ -97,7 +97,7 @@ export const packageVersionsMock: PaginatedpythonPythonPackageContentResponseLis
       },
       {
         pulp_href:
-          "/api/pulp/calunga-ui-dev/api/v3/content/python/packages/019c24e4-0002-0000-0000-000000000002/",
+          "/api/pulp/public-trusted-libraries-ui-dev/api/v3/content/python/packages/019c24e4-0002-0000-0000-000000000002/",
         prn: "prn:python.pythonpackagecontent:019c24e4-0002-0000-0000-000000000002",
         pulp_created: "2026-01-20T10:00:00.000000Z",
         pulp_last_updated: "2026-01-20T10:00:00.000000Z",
@@ -129,7 +129,7 @@ export const packageVersionsMock: PaginatedpythonPythonPackageContentResponseLis
       },
       {
         pulp_href:
-          "/api/pulp/calunga-ui-dev/api/v3/content/python/packages/019c24e4-0004-0000-0000-000000000004/",
+          "/api/pulp/public-trusted-libraries-ui-dev/api/v3/content/python/packages/019c24e4-0004-0000-0000-000000000004/",
         prn: "prn:python.pythonpackagecontent:019c24e4-0004-0000-0000-000000000004",
         pulp_created: "2026-02-10T10:00:00.000000Z",
         pulp_last_updated: "2026-02-10T10:00:00.000000Z",
@@ -1984,7 +1984,7 @@ export const uniquePackageMock: UniquePackageMetadataResponse = {
         size: 29241,
         upload_time: "2026-02-05 17:53:41.981882+00:00",
         upload_time_iso_8601: "2026-02-05T17:53:41.981882+00:00",
-        url: "https://packages.redhat.com/api/pulp-content/calunga-ui-dev/rhoai/3.0/cpu-ubi9-test/tenacity-8.5.0-2-py3-none-any.whl",
+        url: "https://packages.redhat.com/api/pulp-content/public-trusted-libraries-ui-dev/rhoai/3.0/cpu-ubi9-test/tenacity-8.5.0-2-py3-none-any.whl",
         yanked: false,
         yanked_reason: undefined,
       },
@@ -2007,7 +2007,7 @@ export const uniquePackageMock: UniquePackageMetadataResponse = {
         size: 29285,
         upload_time: "2026-02-05 17:55:36.055940+00:00",
         upload_time_iso_8601: "2026-02-05T17:55:36.055940+00:00",
-        url: "https://packages.redhat.com/api/pulp-content/calunga-ui-dev/rhoai/3.0/cpu-ubi9-test/tenacity-9.1.2-2-py3-none-any.whl",
+        url: "https://packages.redhat.com/api/pulp-content/public-trusted-libraries-ui-dev/rhoai/3.0/cpu-ubi9-test/tenacity-9.1.2-2-py3-none-any.whl",
         yanked: false,
         yanked_reason: undefined,
       },
@@ -2031,7 +2031,7 @@ export const uniquePackageMock: UniquePackageMetadataResponse = {
       size: 29285,
       upload_time: "2026-02-05 17:55:36.055940+00:00",
       upload_time_iso_8601: "2026-02-05T17:55:36.055940+00:00",
-      url: "https://packages.redhat.com/api/pulp-content/calunga-ui-dev/rhoai/3.0/cpu-ubi9-test/tenacity-9.1.2-2-py3-none-any.whl",
+      url: "https://packages.redhat.com/api/pulp-content/public-trusted-libraries-ui-dev/rhoai/3.0/cpu-ubi9-test/tenacity-9.1.2-2-py3-none-any.whl",
       yanked: false,
       yanked_reason: undefined,
     },
