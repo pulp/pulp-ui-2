@@ -1,14 +1,18 @@
-import { getPackagesFilteredByDistributionAndText } from "@app/pages/python-list/helpers";
-import { SearchInput } from "@patternfly/react-core";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+import { SearchInput } from "@patternfly/react-core";
+
+import { getDistributionId } from "@app/api/models";
+import type { PythonPythonDistributionResponse } from "@app/client";
+import { getPackagesFilteredByDistributionAndText } from "@app/pages/python-list/helpers";
+
 interface PackageSearchBarProps {
-  distributionBasePath: string;
+  distribution: PythonPythonDistributionResponse;
 }
 
 export const PackageSearchBar: React.FC<PackageSearchBarProps> = ({
-  distributionBasePath,
+  distribution,
 }) => {
   const navigate = useNavigate();
 
@@ -19,7 +23,7 @@ export const PackageSearchBar: React.FC<PackageSearchBarProps> = ({
 
     navigate(
       getPackagesFilteredByDistributionAndText({
-        distributionPath: distributionBasePath,
+        distributionId: getDistributionId(distribution),
         filterText: value,
       }),
     );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { generatePath, Link, useSearchParams } from "react-router-dom";
 
 import {
   Breadcrumb,
@@ -21,17 +21,14 @@ import {
 } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
 
+import { getDistributionId } from "@app/api/models";
 import { DocumentMetadata } from "@app/components/DocumentMetadata";
+import { useSuspenseDistributionById } from "@app/queries/distributions";
 import {
   useFetchPackageContent,
   useSuspenseUniquePackageMetadata,
 } from "@app/queries/packages";
-import {
-  distributionBasePathQueryParam,
-  PathParam,
-  Paths,
-  useRouteParams,
-} from "@app/Routes";
+import { PathParam, Paths, useRouteParams } from "@app/Routes";
 
 import {
   FilesTab,
@@ -41,7 +38,7 @@ import {
 } from "./components";
 
 export const PythonDetails: React.FC = () => {
-  const distributionBasePath = useRouteParams(PathParam.DISTRIBUTION_BASE_PATH);
+  const distributionId = useRouteParams(PathParam.DISTRIBUTION_ID);
   const packageName = useRouteParams(PathParam.PYTHON_ID);
 
   const [searchParams] = useSearchParams();
@@ -49,8 +46,10 @@ export const PythonDetails: React.FC = () => {
 
   const [activeTabKey, setActiveTabKey] = React.useState<number>(0);
 
+  const { distribution } = useSuspenseDistributionById(distributionId);
+
   const { pkg, isFetching } = useSuspenseUniquePackageMetadata({
-    distributionPath: distributionBasePath,
+    distributionPath: distribution.base_path,
     packageName,
     packageVersion: versionParam,
   });
@@ -140,10 +139,9 @@ export const PythonDetails: React.FC = () => {
               <Breadcrumb>
                 <BreadcrumbItem>
                   <Link
-                    to={{
-                      pathname: Paths.python,
-                      search: `?${distributionBasePathQueryParam}=${distributionBasePath}`,
-                    }}
+                    to={generatePath(Paths.packageList, {
+                      distributionId: getDistributionId(distribution),
+                    })}
                   >
                     Packages
                   </Link>
@@ -154,7 +152,7 @@ export const PythonDetails: React.FC = () => {
           </Flex>
           <Flex flex={{ default: "flex_2" }}>
             <FlexItem>
-              <PackageSearchBar distributionBasePath={distributionBasePath} />
+              <PackageSearchBar distribution={distribution} />
             </FlexItem>
           </Flex>
         </Flex>
@@ -241,7 +239,7 @@ export const PythonDetails: React.FC = () => {
                 <VersionsTab
                   releases={releases ?? {}}
                   currentVersion={currentVersion}
-                  distributionBasePath={distributionBasePath}
+                  distribution={distribution}
                   packageName={info.name ?? ""}
                 />
               </TabContentBody>

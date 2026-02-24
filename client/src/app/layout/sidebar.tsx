@@ -21,12 +21,12 @@ export const SidebarApp: React.FC = () => {
         <NavList>
           <li className={nav.navItem}>
             <NavLink
-              to={Paths.python}
+              to={Paths.distributionList}
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
               }}
             >
-              Python
+              Distributions
             </NavLink>
           </li>
         </NavList>

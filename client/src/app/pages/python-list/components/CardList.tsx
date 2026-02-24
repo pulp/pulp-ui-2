@@ -29,9 +29,11 @@ import {
 import CertificateIcon from "@patternfly/react-icons/dist/esm/icons/certificate-icon";
 import UserIcon from "@patternfly/react-icons/dist/esm/icons/user-icon";
 
-import type { DistributionResponse } from "@app/client";
+import { getDistributionId } from "@app/api/models";
+import type { PythonPythonDistributionResponse } from "@app/client";
 import { ConditionalDataListBody } from "@app/components/DataListControls/ConditionalDataListBody";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { SimplePagination } from "@app/components/SimplePagination";
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { useLocalTableControls } from "@app/hooks/table-controls";
@@ -39,11 +41,10 @@ import { useFetchUniquePackages } from "@app/queries/packages";
 import { Paths } from "@app/Routes";
 import { toCamelCase } from "@app/utils/utils";
 
-import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { WithPackage } from "./WithPackage";
 
 type ICardListProps = {
-  distribution: DistributionResponse;
+  distribution: PythonPythonDistributionResponse;
 };
 
 export const CardList: React.FC<ICardListProps> = ({ distribution }) => {
@@ -110,8 +111,8 @@ export const CardList: React.FC<ICardListProps> = ({ distribution }) => {
 
   const onClickCard = (packageName: string) => {
     navigate(
-      generatePath(Paths.pythonDetails, {
-        distributionBasePath: distribution.base_path,
+      generatePath(Paths.packageDetails, {
+        distributionId: getDistributionId(distribution),
         pythonId: packageName,
       }),
     );

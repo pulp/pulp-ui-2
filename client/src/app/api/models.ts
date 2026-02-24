@@ -1,3 +1,5 @@
+import type { PythonPythonDistributionResponse } from "@app/client";
+
 export type WithUiId<T> = T & { _ui_unique_id: string };
 
 /** Mark an object as "New" therefore does not have an `id` field. */
@@ -132,4 +134,10 @@ export type UniquePackageMetadataResponse = {
     yanked?: boolean;
     yanked_reason?: string;
   }[];
+};
+
+export const getDistributionId = (
+  distribution: PythonPythonDistributionResponse,
+) => {
+  return distribution.prn?.split(":").pop() ?? "";
 };
