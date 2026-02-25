@@ -50,7 +50,7 @@ export const buildPulpEnv = ({
   UI_INGRESS_PROXY_BODY_SIZE = "500m",
 
   PULP_API_URL,
-  PULP_DOMAIN = "calunga-ui-dev",
+  PULP_DOMAIN = "public-trusted-libraries-ui-dev",
 
   BRANDING,
 }: Partial<PulpEnvType> = {}): PulpEnvType => ({
