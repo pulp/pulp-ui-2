@@ -62,18 +62,6 @@ export const distributionByIdQueryOptions = (args: {
   });
 };
 
-export const useFetchDistributionById = (distributionId: string) => {
-  const { data, isLoading, error } = useQuery({
-    ...distributionByIdQueryOptions({ distributionId }),
-  });
-
-  return {
-    distribution: data ?? null,
-    isFetching: isLoading,
-    fetchError: error as AxiosError | null,
-  };
-};
-
 export const useSuspenseDistributionById = (distributionId: string) => {
   const { data, isLoading, error, refetch } = useSuspenseQuery({
     ...distributionByIdQueryOptions({ distributionId }),
