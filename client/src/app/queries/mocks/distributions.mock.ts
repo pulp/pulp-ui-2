@@ -1,4 +1,7 @@
-import type { PaginatedDistributionResponseList } from "@app/client";
+import type {
+  PaginatedDistributionResponseList,
+  PythonPythonDistributionResponse,
+} from "@app/client";
 
 export const distributionsMock: PaginatedDistributionResponseList = {
   count: 69,
@@ -1179,4 +1182,26 @@ export const distributionsMock: PaginatedDistributionResponseList = {
         "/api/pulp/calunga-ui-dev/api/v3/repositories/python/python/019c24e0-a105-78fd-a36e-9c1b4794e17e/",
     },
   ],
+};
+
+export const distributionMock: PythonPythonDistributionResponse = {
+  pulp_href:
+    "/api/pulp/calunga-ui-dev/api/v3/distributions/python/pypi/019c2ec9-23a0-7b47-af9c-423a8fb17a4b/",
+  prn: "prn:python.pythondistribution:019c2ec9-23a0-7b47-af9c-423a8fb17a4b",
+  pulp_created: "2026-02-05T17:10:59.745424Z",
+  pulp_last_updated: "2026-02-05T17:10:59.745439Z",
+  base_path: "rhoai/3.0/cpu-ubi9-test",
+  base_url:
+    "https://packages.redhat.com/api/pypi/calunga-ui-dev/rhoai/3.0/cpu-ubi9-test/",
+  content_guard: undefined,
+  no_content_change_since: undefined,
+  hidden: false,
+  pulp_labels: {},
+  name: "rhoai-3.0-cpu-ubi9-test",
+  repository:
+    "/api/pulp/calunga-ui-dev/api/v3/repositories/python/python/019c2ec9-1e4a-7b64-9b3c-b6315072e7f6/",
+  publication: undefined,
+  repository_version: undefined,
+  allow_uploads: true,
+  remote: undefined,
 };

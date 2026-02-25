@@ -1,94 +1,29 @@
-import React from "react";
-import { useSearchParams } from "react-router-dom";
+import type React from "react";
 
-import {
-  Divider,
-  EmptyState,
-  EmptyStateActions,
-  EmptyStateBody,
-  EmptyStateFooter,
-  PageSection,
-  Title,
-} from "@patternfly/react-core";
-import CubesIcon from "@patternfly/react-icons/dist/esm/icons/cubes-icon";
+import { PageSection, Title } from "@patternfly/react-core";
 
-import { distributionBasePathQueryParam } from "@app/Routes";
-import type { DistributionResponse } from "@app/client";
+import { PathParam, useRouteParams } from "@app/Routes";
 import { DocumentMetadata } from "@app/components/DocumentMetadata";
-import { LoadingDataEmptyState } from "@app/components/LoadingDataEmptyState";
-import { LoadingWrapper } from "@app/components/LoadingWrapper";
-import { useFetchDistributions } from "@app/queries/distributions";
+import { useSuspenseDistributionById } from "@app/queries/distributions";
 
 import { CardList } from "./components/CardList";
-import { DistributionSelector } from "./components/DistributionsSelector";
 
 export const PythonList: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const distributionParam = searchParams.get(distributionBasePathQueryParam);
+  const distributionId = useRouteParams(PathParam.DISTRIBUTION_ID);
 
-  const { distributions, isFetching, fetchError } = useFetchDistributions();
-  const selectedDistribution = React.useMemo(() => {
-    return distributions.find((d) => d.base_path === distributionParam) ?? null;
-  }, [distributions, distributionParam]);
-
-  const onDistributionSelected = React.useCallback(
-    (value: DistributionResponse) => {
-      setSearchParams({ distribution: value.base_path }, { replace: true });
-    },
-    [setSearchParams],
-  );
+  const { distribution } = useSuspenseDistributionById(distributionId);
 
   return (
     <>
-      <DocumentMetadata title={"Python"} />
-      <LoadingWrapper
-        isFetching={isFetching}
-        fetchError={fetchError}
-        isFetchingState={<LoadingDataEmptyState />}
-      >
-        <PageSection>
-          <DistributionSelector
-            distributions={distributions}
-            selected={selectedDistribution}
-            onChange={onDistributionSelected}
-          />
-        </PageSection>
-        <Divider />
-        {selectedDistribution ? (
-          <>
-            <PageSection>
-              <Title headingLevel="h1" size="2xl">
-                {selectedDistribution.name}
-              </Title>
-            </PageSection>
-            <PageSection>
-              <CardList distribution={selectedDistribution} />
-            </PageSection>
-          </>
-        ) : (
-          <PageSection>
-            <EmptyState
-              titleText="Empty state"
-              headingLevel="h4"
-              icon={CubesIcon}
-            >
-              <EmptyStateBody>
-                Packages are grouped in distributions. Select one to see
-                packages.
-              </EmptyStateBody>
-              <EmptyStateFooter>
-                <EmptyStateActions>
-                  <DistributionSelector
-                    distributions={distributions}
-                    selected={selectedDistribution}
-                    onChange={onDistributionSelected}
-                  />
-                </EmptyStateActions>
-              </EmptyStateFooter>
-            </EmptyState>
-          </PageSection>
-        )}
-      </LoadingWrapper>
+      <DocumentMetadata title={distribution.name} />
+      <PageSection>
+        <Title headingLevel="h1" size="2xl">
+          {distribution.name}
+        </Title>
+      </PageSection>
+      <PageSection>
+        <CardList distribution={distribution} />
+      </PageSection>
     </>
   );
 };

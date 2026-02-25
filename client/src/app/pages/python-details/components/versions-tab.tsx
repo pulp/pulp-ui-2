@@ -1,31 +1,35 @@
-import type React from "react";
-import { useMemo } from "react";
+import { Paths } from "@app/Routes";
 import {
-  Title,
-  Label,
+  getDistributionId,
+  type UniquePackageMetadataResponse,
+} from "@app/api/models";
+import type { PythonPythonDistributionResponse } from "@app/client";
+import {
   Button,
   EmptyState,
   EmptyStateBody,
+  Label,
+  Title,
 } from "@patternfly/react-core";
-import { Table, Thead, Tr, Th, Tbody, Td } from "@patternfly/react-table";
-import { generatePath, useNavigate } from "react-router-dom";
-import { Paths } from "@app/Routes";
-import type { UniquePackageMetadataResponse } from "@app/api/models";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import prettyBytes from "pretty-bytes";
+import type React from "react";
+import { useMemo } from "react";
+import { generatePath, useNavigate } from "react-router-dom";
 
 type ReleaseFiles = NonNullable<UniquePackageMetadataResponse["releases"]>;
 
 interface VersionsTabProps {
   releases: ReleaseFiles;
   currentVersion: string;
-  distributionBasePath: string;
+  distribution: PythonPythonDistributionResponse;
   packageName: string;
 }
 
 export const VersionsTab: React.FC<VersionsTabProps> = ({
   releases,
   currentVersion,
-  distributionBasePath,
+  distribution,
   packageName,
 }) => {
   const navigate = useNavigate();
@@ -90,8 +94,8 @@ export const VersionsTab: React.FC<VersionsTabProps> = ({
 
   const navigateToVersion = (version: string) => {
     navigate(
-      `${generatePath(Paths.pythonDetails, {
-        distributionBasePath,
+      `${generatePath(Paths.packageDetails, {
+        distributionId: getDistributionId(distribution),
         pythonId: packageName,
       })}?version=${encodeURIComponent(version)}`,
     );
